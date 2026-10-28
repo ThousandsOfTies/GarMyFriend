@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-28",
+  "rotary": {
+    "partNumber": "KY-040",
+    "manufacturer": null,
+    "identitySource": "User confirmed part number and terminal markings",
+    "terminals": [
+      "CLK",
+      "DT",
+      "SW",
+      "+",
+      "GND"
+    ],
+    "plannedSupplyV": 3.3,
+    "pullUpsVerified": false,
+    "documentation": "modules/KY-040.md"
+  },
+  "display": {
+    "id": "round-lcd-7pin",
+    "partNumber": null,
+    "manufacturer": null,
+    "controllerExpected": "GC9A01",
+    "controllerVerified": false,
+    "resolutionExpected": [
+      240,
+      240
+    ],
+    "terminals": [
+      "RST",
+      "CS",
+      "DC",
+      "SDA",
+      "SCL",
+      "GND",
+      "VCC"
+    ],
+    "terminalCorrection": {
+      "from": "SCM",
+      "to": "SDA",
+      "source": "User confirmed"
+    },
+    "plannedSupplyV": 3.3,
+    "supplyCompatibilityVerified": false,
+    "backlightTerminalPresent": false,
+    "documentation": "modules/round-lcd-7pin.md"
+  }
+}

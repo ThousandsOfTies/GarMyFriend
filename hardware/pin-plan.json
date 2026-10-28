@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "board": "Orange Pi Zero 2W",
+  "status": "planned-not-hardware-verified",
+  "numbering": "40-pin header physical positions",
+  "gpioChip": null,
+  "linuxLineOffsets": null,
+  "spiDevice": null,
+  "spiControllerExpected": "SPI1",
+  "spiChipSelect": 0,
+  "documentation": "WIRING.md",
+  "connections": [
+    {
+      "module": "display",
+      "terminal": "RST",
+      "physicalPin": 22,
+      "signal": "PI6"
+    },
+    {
+      "module": "display",
+      "terminal": "CS",
+      "physicalPin": 24,
+      "signal": "PH5"
+    },
+    {
+      "module": "display",
+      "terminal": "DC",
+      "physicalPin": 18,
+      "signal": "PH4"
+    },
+    {
+      "module": "display",
+      "terminal": "SDA",
+      "physicalPin": 19,
+      "signal": "PH7"
+    },
+    {
+      "module": "display",
+      "terminal": "SCL",
+      "physicalPin": 23,
+      "signal": "PH6"
+    },
+    {
+      "module": "display",
+      "terminal": "GND",
+      "physicalPin": 6,
+      "signal": "GND"
+    },
+    {
+      "module": "display",
+      "terminal": "VCC",
+      "physicalPin": 1,
+      "signal": "3.3V"
+    },
+    {
+      "module": "KY-040",
+      "terminal": "CLK",
+      "physicalPin": 29,
+      "signal": "PI0"
+    },
+    {
+      "module": "KY-040",
+      "terminal": "DT",
+      "physicalPin": 31,
+      "signal": "PI15"
+    },
+    {
+      "module": "KY-040",
+      "terminal": "SW",
+      "physicalPin": 37,
+      "signal": "PI16"
+    },
+    {
+      "module": "KY-040",
+      "terminal": "+",
+      "physicalPin": 17,
+      "signal": "3.3V"
+    },
+    {
+      "module": "KY-040",
+      "terminal": "GND",
+      "physicalPin": 20,
+      "signal": "GND"
+    }
+  ],
+  "sources": [
+    "https://github.com/orangepi-xunlong/wiringOP/blob/a7921ca2f5c124203be10d3418db70a2e15f3c10/wiringPi/wiringPi.c#L1873",
+    "https://sensorkit.joy-it.net/en/sensors/ky-040"
+  ]
+}
