@@ -8,12 +8,13 @@
 | `connections.csv` | 実機の物理配線計画。source_pinはOrange Pi Zero 2Wの40ピンヘッダー番号、target_pinは部品の印字 |
 | `gpio.csv` | 現在動かすVMのGPIO chip・line・方向・プルアップ |
 | `spi.csv` | 現在動かすVMのSPI device・bus・CS・mode・速度 |
+| `orangepi-zero2w/gpio.csv`・`spi.csv` | 実機で確認したコントローラーに対する割り当て。GPIOリセットとノブの内部プルアップを含む |
 
 列名はGARの `gar hw init` と同じものです。`i2c.csv` / `video.csv` は使う装置がないため置いていません。GARの読込は未配置のCSVを空として扱います。
 
 **connections.csvの物理ピンと、gpio.csvのlineは異なる番号体系です。**
-現在のgpio/spiはVMで確認済みの割り当てです。実機のLinux chip/line/deviceは未確認なので、物理番号をそのままgpio.csvのlineへ写しません。
-実機へ進むときは、Armbian上で信号名とdeviceを確認してProduct内の対象別CSVへ分けます。
+直下のgpio/spiはVMの割り当てです。実機はArmbianのpin controllerとSPIデバイスを確認し、`orangepi-zero2w/` に分けています。
+物理番号をgpio.csvのlineへ写しません。たとえば物理18番のPH4は、今回の実機ではgpiochip1のline 228です。
 
 `application/hardware.cjs` がgpio/spiを読み、GPIO読取とC++液晶出力へ値を渡します。
 仮想ドライバも同じCSVからSPI名とDCラインを取得し、BridgeはGARの既存CSV読込を使います。

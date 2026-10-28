@@ -4,7 +4,7 @@ orangepi_zero2w,24,round_lcd_7pin,CS,PH5/SPI1_CS0,Planned physical header pin; d
 orangepi_zero2w,18,round_lcd_7pin,DC,PH4,Planned physical header pin; display command/data; not hardware verified
 orangepi_zero2w,19,round_lcd_7pin,SDA,PH7/SPI1_MOSI,Planned physical header pin; user corrected SCM to SDA; not I2C
 orangepi_zero2w,23,round_lcd_7pin,SCL,PH6/SPI1_CLK,Planned physical header pin; SPI clock; not hardware verified
-orangepi_zero2w,6,round_lcd_7pin,GND,GND,Planned common ground
+orangepi_zero2w,6,round_lcd_7pin,GND,GND,Common ground; user found a loose GND pin and insufficient solder on 2026-10-29; repair and display verification pending
 orangepi_zero2w,1,round_lcd_7pin,VCC,3.3V,Planned initial supply; module voltage compatibility not verified
 orangepi_zero2w,29,ky040_encoder,CLK,PI0,Planned physical header pin; encoder phase A; not hardware verified
 orangepi_zero2w,31,ky040_encoder,DT,PI15,Planned physical header pin; encoder phase B; not hardware verified

@@ -30,7 +30,7 @@ def scp(source,destination):
 
 def archive():
     STATE.mkdir(parents=True,exist_ok=True)
-    items=['application','simulation','firmware','shared/expressions.json','simulator','hardware','infra','tests/vm-parts.py','sources/gar-tools/targets/linux-device/runtime/gc9a01-stub','sources/gar-tools/targets/linux-device/runtime/ili9341-stub','sources/gar-tools/targets/linux-device/runtime/rotary-input','sources/gar-tools/targets/linux-device/runtime/web-bridge','sources/gar-tools/web-simulator/components/display.mjs','sources/gar-tools/web-simulator/components/framebuffer.mjs','sources/gar-tools/web-simulator/components/rotary.mjs']
+    items=['application','simulation','firmware','shared/expressions.json','simulator','hardware','infra','tests/vm-parts.py','sources/gar-tools/targets/linux-device/runtime/gc9a01-output','sources/gar-tools/targets/linux-device/runtime/gc9a01-stub','sources/gar-tools/targets/linux-device/runtime/ili9341-stub','sources/gar-tools/targets/linux-device/runtime/rotary-input','sources/gar-tools/targets/linux-device/runtime/web-bridge','sources/gar-tools/web-simulator/components/display.mjs','sources/gar-tools/web-simulator/components/framebuffer.mjs','sources/gar-tools/web-simulator/components/rotary.mjs']
     def keep(info):
         parts=Path(info.name).parts
         if '.git' in parts or '__pycache__' in parts or 'node_modules' in parts or info.name.startswith('simulator/gar-components'):return None

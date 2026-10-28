@@ -35,7 +35,9 @@ npm run vm:status   # アプリ・部品・パネルの状態
 npm run vm:stop     # 専用VMを終了
 ```
 
-Cloudflare Quick TunnelのURLは再発行すると変わります。開発用の模擬部品を公開しており、実機はまだ接続していません。
+Cloudflare Quick TunnelのURLは再発行すると変わります。開発用の模擬部品を公開しています。
+
+実機では専用の `garmyfriend` サービスで同じ顔アプリを自動起動します。実機用GPIO/SPIは `hardware/orangepi-zero2w/` から読み、WebPanelを必要としません。[実機の導入・確認手順](infra/orangepi-zero2w/README.md)
 
 ## ソースの役割
 
@@ -44,12 +46,13 @@ Cloudflare Quick TunnelのURLは再発行すると変わります。開発用の
 | `application/` | 表情の選択、アニメーション、GPIO入力、SPIへの描画出力。HTTPやWebPanelに依存しない |
 | `simulation/` | 仮想GPIOへの入力と、ドライバが受け取った画素の中継。表情の意味を持たない |
 | `simulator/` | 共有の液晶・ロータリー部品だけを配置するWebPanel |
-| `hardware/` | VM内のGPIO・SPI割り当て |
+| `hardware/` | 部品・物理配線と、VM / Orange PiそれぞれのGPIO・SPI割り当て |
 | `sources/gar-tools/` | 共有Web Components、GPIO入力、CUSEドライバ、汎用Bridgeのsubmodule |
 | `shared/expressions.json`、`firmware/` | 表情データとC++描画コア |
 | `infra/virtualbox/`、`tools/vm.py` | 専用VMとサービスの構築・配布 |
+| `infra/orangepi-zero2w/` | 実機のARM64ビルド、SPI有効化、専用ユーザーでの自動起動 |
 
-クローンは `git clone --recurse-submodules https://github.com/ThousandsOfTies/GarMyFriend.git`。実行アプリはNode.js 18以上とLinuxのGPIO v2・SPIを利用し、WebPanelを必要としません。実機では液晶の初期化とGPIO/SPI割り当てを確認してから接続します。
+クローンは `git clone --recurse-submodules https://github.com/ThousandsOfTies/GarMyFriend.git`。実行アプリはNode.js 18以上とLinuxのGPIO v2・SPIを利用します。実機ではNode.js 24.22.1 ARM64を使用し、GPIO/SPIの割り当てとノブ入力まで確認済みです。液晶の実表示は確認中です。
 
 ## 検証
 

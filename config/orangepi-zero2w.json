@@ -22,7 +22,7 @@
     "spiClockVerified": false,
     "spiClockNote": "転送時間の計算用の仮定。実機の対応速度・配線は未確認。",
     "pins": null,
-    "connected": false,
+    "connected": true,
     "controllerVerified": false
   },
   "io": {
@@ -39,6 +39,8 @@
     "cpuEmulation": false,
     "electricalSimulation": false,
     "physicalDisplay": false,
+    "physicalGpioInput": true,
+    "physicalSpiWrites": true,
     "devicePerformanceMeasured": false
   },
   "hardwareFiles": {
@@ -46,5 +48,9 @@
     "connections": "hardware/connections.csv",
     "gpio": "hardware/gpio.csv",
     "spi": "hardware/spi.csv"
+  },
+  "physicalHardwareFiles": {
+    "gpio": "hardware/orangepi-zero2w/gpio.csv",
+    "spi": "hardware/orangepi-zero2w/spi.csv"
   }
 }
