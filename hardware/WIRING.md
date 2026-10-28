@@ -8,10 +8,10 @@
 ## 部品の記録
 
 - ロータリー: **[KY-040](modules/KY-040.md)**、端子 CLK / DT / SW / ＋ / GND。
-- 液晶: **[丸型SPI液晶・7ピン・型番不明](modules/round-lcd-7pin.md)**、端子 RST / CS / DC / SDA / SCL / GND / VCC。GC9A01を想定。
+- 液晶: **[丸型SPI液晶・7ピン（YMS PARTS 1.28インチ円形IPS）](modules/round-lcd-7pin.md)**、端子 RST / CS / DC / SDA / SCL / GND / VCC。購入ページがGC9A01搭載と記載。
 
 電源・信号は3.3Vを使用し、実機の顔表示とノブ入力を確認済みです。KY-040の＋は3.3Vへ接続します。
-液晶の型番とコントローラーIDは未同定ですが、GC9A01初期化で表示できることを確認しています。
+液晶は購入ページからYMS PARTS製（商品モデル番号 YMS-circlelcd-pinari）と同定しました。コントローラーIDの読み出しは未実施ですが、GC9A01初期化で表示できることを確認しています。
 
 ## 液晶
 

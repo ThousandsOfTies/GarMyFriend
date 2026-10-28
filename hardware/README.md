@@ -4,7 +4,7 @@
 
 | ファイル | 編集する内容 |
 | --- | --- |
-| `components.csv` | 部品ID、名称、種類、型番。KY-040はpart_number列、液晶の型番は不明なので空欄 |
+| `components.csv` | 部品ID、名称、種類、型番。KY-040は実物の型番、液晶は購入ページの商品モデル番号をpart_number列に記録 |
 | `connections.csv` | 実機の物理配線計画。source_pinはOrange Pi Zero 2Wの40ピンヘッダー番号、target_pinは部品の印字 |
 | `gpio.csv` | 現在動かすVMのGPIO chip・line・方向・プルアップ |
 | `spi.csv` | 現在動かすVMのSPI device・bus・CS・mode・速度 |

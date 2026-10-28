@@ -1,7 +1,7 @@
-# 丸型SPI液晶・7ピン・型番不明
+# 丸型SPI液晶・7ピン（YMS PARTS 1.28インチ円形IPS）
 
-手持ち液晶基板の型番・メーカーは不明です。任意の製品型番は付けず、管理上の識別名を `round-lcd-7pin` とします。
-GC9A01の初期化命令列で240×240の顔を表示できることを実機で確認しました。搭載コントローラーのIDと電源回路の型番は未同定です。
+手持ち液晶は、2026-10-29にユーザーが購入ページを示したことで、YMS PARTSの1.28インチ円形IPSディスプレイ（商品モデル番号 `YMS-circlelcd-pinari`、Amazon.co.jp ASIN `B0G4JW94KZ`）と同定しました。管理上の識別名は引き続き `round-lcd-7pin` とします。
+購入ページはドライバーICをGC9A01、解像度を240×240、4線式SPI、外形を約36×44×2.7mmと記載しています。GC9A01の初期化命令列で240×240の顔を表示できることは実機で確認済みです。一方、搭載コントローラーのID読み出しと電源回路の同定は未実施です。
 
 2026-10-28に確認した端子表記は **RST / CS / DC / SDA / SCL / GND / VCC**。
 最初の申告「SCM」はユーザーに確認し、「SDA」へ訂正済みです。BL端子は申告された7ピンに含まれません。
@@ -16,10 +16,11 @@ GC9A01の初期化命令列で240×240の顔を表示できることを実機で
 | GND | 共通グラウンド | 14 | GND |
 | VCC | 電源 | 1 | 3.3V（実機で測定・表示確認済み） |
 
-このSDA/SCLは、CS/DC付き4線SPI液晶という端子構成とGC9A01想定に基づく割り当てです。
+このSDA/SCLは、CS/DC付き4線SPI液晶という端子構成と、購入ページのGC9A01記載に基づく割り当てです。
 SDAはMOSIとして扱い、I²CのSDAへは接続しません。MISOは不要です。
 
-VCCは3.3Vで動作確認済みです。購入ページや基板写真・電源回路が確認できたら定格を追記します。5V対応品とは扱いません。
+VCCは3.3Vで動作確認済みです。購入ページは動作電圧を3V〜5Vと記載していますが、これは販売ページの記載であり、実機では3.3V以外の電圧は未検証です。このプロジェクトでは引き続き3.3Vで使います。
+購入ページの汎用ピン説明にはBLK端子を含む8ピンが載っていますが、実物は申告された7ピンでBL端子はありません。実物の端子表記を正とし、BLK配線は作りません。
 BL端子がないことからバックライト回路や自動点灯を断定しません。
 
 実機用C++出力は、RSTをGPIOで制御してから共有のGC9A01初期化を実行します。設定は `orangepi-zero2w/gpio.csv`・`spi.csv` で、SPI1 CS0を使います。
@@ -31,6 +32,7 @@ Linuxのデバイス名はカーネルの設定によるため、SoCのSPI1と�
 
 参照:
 
+- [購入ページ（Amazon.co.jp、ASIN B0G4JW94KZ）](https://www.amazon.co.jp/dp/B0G4JW94KZ) - YMS PARTSの商品モデル番号と仕様の出典。ピン説明は汎用の8ピン記載で、実物の7ピンとは異なります。
 - [Orange Pi公式wiringOPのZero 2W物理ピン対応](https://github.com/orangepi-xunlong/wiringOP/blob/a7921ca2f5c124203be10d3418db70a2e15f3c10/wiringPi/wiringPi.c#L1873)
 - [Orange Pi Zero 2Wメーカー作成マニュアル・SPI説明](https://orangepi.net/wp-content/uploads/2023/10/OrangePi_Zero2w_H618_User-Manual_v1.1.pdf)
 - [Waveshare GC9A01モジュールのSPI信号説明](https://www.waveshare.com/wiki/1.28inch_LCD_Module)

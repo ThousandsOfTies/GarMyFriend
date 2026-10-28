@@ -12,7 +12,7 @@
 
 開発時は同じ顔アプリをVirtualBoxのLinux上で動かし、HTTPSのWebPanelを実物の部品の代わりに使います。WebPanelに置くのは、顔のディスプレイと表情を変えるノブの2点です。
 
-手持ちノブの型番は **[KY-040](hardware/modules/KY-040.md)**。液晶は **[丸型SPI液晶・7ピン・型番不明](hardware/modules/round-lcd-7pin.md)** として記録しています。[実機の配線表](hardware/WIRING.md)はVMの仮想GPIO番号と区別して管理します。
+手持ちノブの型番は **[KY-040](hardware/modules/KY-040.md)**。液晶は **[YMS PARTS 1.28インチ円形IPS・7ピン](hardware/modules/round-lcd-7pin.md)**（商品モデル番号 YMS-circlelcd-pinari）として記録しています。[実機の配線表](hardware/WIRING.md)はVMの仮想GPIO番号と区別して管理します。
 
 部品・型番は [`hardware/components.csv`](hardware/components.csv)、物理配線は [`connections.csv`](hardware/connections.csv) が正本です。VMの実行時割り当ては `gpio.csv`・`spi.csv` から読みます。[CSVの役割](hardware/README.md)
 
