@@ -30,7 +30,7 @@ def scp(source,destination):
 
 def archive():
     STATE.mkdir(parents=True,exist_ok=True)
-    items=['application','simulation','firmware','shared/expressions.json','preview/face.js','preview/presets.js','simulator','config','hardware','infra','tests/vm-devices.py','sources/gar-tools/targets/linux-device/runtime','sources/gar-tools/web-simulator/components','sources/gar-tools/web-simulator/tests','sources/gar-tools/web-simulator/serve.py']
+    items=['application','simulation','firmware','shared/expressions.json','preview/face.js','preview/presets.js','simulator','config','hardware','infra','tests/vm-devices.py','tests/vm-rotary.py','sources/gar-tools/targets/linux-device/runtime','sources/gar-tools/web-simulator/components','sources/gar-tools/web-simulator/tests','sources/gar-tools/web-simulator/serve.py']
     def keep(info):
         parts=Path(info.name).parts
         if '.git' in parts or '__pycache__' in parts or 'node_modules' in parts or info.name.startswith('simulator/gar-components'):return None

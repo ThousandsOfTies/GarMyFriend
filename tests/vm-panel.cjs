@@ -26,9 +26,22 @@ const url = JSON.parse(fs.readFileSync(path.join(root, '.gar/vm/panel.json'))).u
     const initial=await waitState(s=>s.io.displayReady&&s.io.frames>2);
     assert.equal(initial.host.environment,'virtualbox-linux');assert.equal(initial.host.platform,'linux');
     assert.equal(initial.io.backend,'linux-dev');assert.deepEqual(initial.io.devices,['/dev/spidev0.0','/dev/i2c-1','/dev/gpiochip0']);
+    await waitState(s=>s.inputs.rotary.ready);
+    assert.equal((await state()).inputs.rotary.backend,'gpio-v2');
+    const counter=(await state()).inputs.rotary.counter;
     const neutral=initial.io.frameId;
-    await page.locator('[data-expression="happy"]').click();
-    await waitState(s=>s.expression==='happy'&&s.io.frameId!==neutral);
+    const rotary=page.locator('#expression-rotary');
+    const plus=rotary.getByRole('button',{name:'Rotate clockwise',exact:true});
+    const minus=rotary.getByRole('button',{name:'Rotate counter-clockwise',exact:true});
+    await plus.click();
+    await waitState(s=>s.expression==='happy'&&s.inputs.rotary.counter===counter+1&&s.io.frameId!==neutral);
+    await minus.click();await waitState(s=>s.expression==='neutral'&&s.inputs.rotary.counter===counter);
+    await minus.click();await waitState(s=>s.expression==='wink'&&s.inputs.rotary.counter===counter-1);
+    await plus.click();await waitState(s=>s.expression==='neutral');
+    await plus.click();await waitState(s=>s.expression==='happy');
+    const rotaryEvents=(await state()).events.length;
+    await rotary.getByRole('button',{name:'まばたき',exact:true}).click();
+    await waitState(s=>s.events.length>rotaryEvents&&s.events.at(-1).message==='まばたき');
     await page.waitForTimeout(900);await command({type:'pause',value:true});
     // Compare every canvas pixel with the bytes read from the CUSE driver's bridge.
     await page.waitForTimeout(1200);
@@ -53,6 +66,6 @@ const url = JSON.parse(fs.readFileSync(path.join(root, '.gar/vm/panel.json'))).u
     fs.mkdirSync(path.join(root,'artifacts'),{recursive:true});
     await page.screenshot({path:path.join(root,'artifacts/vm-webpanel.png'),fullPage:true});
     assert.deepEqual(errors,[]);
-    console.log('PASS: HTTPS → Linux VM → /dev SPI/GPIO/I2C → GAR bridge → exact RGB565 canvas and PWM stop/reset');
+    console.log('PASS: rotary.mjs → Bridge → GPIO quadrature input → app → /dev SPI → exact RGB565 canvas; reverse, wrap, press, PWM stop/reset');
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

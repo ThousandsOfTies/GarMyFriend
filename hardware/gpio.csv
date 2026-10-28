@@ -1,2 +1,5 @@
-name,line,direction,role,active,pull,comment
-lcd_dc,16,output,display,high,,Virtual GPIO only; physical Orange Pi pin mapping is not selected
+name,chip,line,direction,role,active,pull,comment
+lcd_dc,/dev/gpiochip0,16,output,display,high,,Virtual GPIO only; physical Orange Pi pin mapping is not selected
+encoder_a,/dev/gpiochip0,20,input,encoder,high,pull-up,Virtual clock line; physical wiring is not selected
+encoder_b,/dev/gpiochip0,21,input,encoder,high,pull-up,Virtual data line; physical wiring is not selected
+encoder_sw,/dev/gpiochip0,22,input,button,low,pull-up,Virtual switch line; physical wiring is not selected

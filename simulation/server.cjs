@@ -5,8 +5,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
 const { performance } = require('node:perf_hooks');
-const { RobotRuntime, ValidationError, scenarios } = require('./runtime.cjs');
+const { RobotRuntime, ValidationError, validateCommand, scenarios } = require('./runtime.cjs');
 const { LinuxDevices } = require('./linux-devices.cjs');
+const { RotaryInput } = require('./rotary-input.cjs');
 const contentTypes = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.txt': 'text/plain; charset=utf-8' };
 
 function parsePublicOrigin(value) {
@@ -30,7 +31,9 @@ function createSimulatorServer({ root = path.resolve(__dirname, '..'), buildId =
   const configuredHost = configuredOrigin ? new URL(configuredOrigin).host : null;
   const host = Object.freeze({ environment, platform: process.platform, arch: process.arch, hostname: os.hostname() });
   const devices = process.env.ROBOT_IO_BACKEND === 'linux-dev' ? new LinuxDevices(root) : null;
-  const state = () => ({ ...runtime.state(), host, io: devices ? devices.status() : { backend:'browser-preview',live:false,source:'開発用ロジック試験（/dev未使用）' } });
+  let previewCounter=0;
+  const rotary = devices ? new RotaryInput(root, command=>{runtime.command(command);devices.submit(runtime.state());}) : null;
+  const state = () => ({ ...runtime.state(), host, inputs:{rotary:rotary?rotary.status():{backend:'logic-preview',ready:true,error:null,counter:previewCounter}}, io: devices ? devices.status() : { backend:'browser-preview',live:false,source:'開発用ロジック試験（/dev未使用）' } });
   let timer = null;
   const server = http.createServer(async (req, res) => {
     const port = server.address()?.port;
@@ -83,7 +86,13 @@ function createSimulatorServer({ root = path.resolve(__dirname, '..'), buildId =
       for await (const chunk of req) { length += chunk.length; if (length > 1024 * 1024) throw new ValidationError('入力が大きすぎます（最大1MiB）。', 413); chunks.push(chunk); }
       let command;
       try { command = JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { throw new ValidationError('JSONを読み取れません。'); }
-      runtime.command(command);
+      if(command?.type==='rotary' && rotary){
+        validateCommand(command);
+        try {await rotary.inject(command);} catch(error){throw new ValidationError(`ロータリー入力を反映できません: ${error.message}`,503);}
+      } else {
+        runtime.command(command);
+        if(command.type==='rotary'&&command.action==='rotate')previewCounter+=command.direction;
+      }
       devices?.submit(runtime.state());
       return json(200, state());
     } catch (error) {
@@ -99,7 +108,7 @@ function createSimulatorServer({ root = path.resolve(__dirname, '..'), buildId =
     timer = setInterval(() => { const now = performance.now(); runtime.advance(Math.min(250, Math.max(0, now - previous))); previous = now; devices?.submit(runtime.state()); }, 50);
     timer.unref();
   });
-  server.on('close', () => { if (timer) clearInterval(timer); devices?.close(); });
+  server.on('close', () => { if (timer) clearInterval(timer); devices?.close(); rotary?.close(); });
   return server;
 }
 function parseArguments(argv) {

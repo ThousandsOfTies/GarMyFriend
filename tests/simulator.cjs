@@ -36,6 +36,19 @@ const close = () => new Promise(resolve => { server.closeAllConnections?.(); ser
     await page.waitForSelector('[data-scenario="greeting"]');
     assert.equal(await page.locator('[data-expression]').count(), 8);
     assert.equal(await page.locator('gar-sg90').count(), 6);
+    const rotary=page.locator('#expression-rotary');
+    await rotary.getByRole('button',{name:'Rotate clockwise',exact:true}).click();
+    await page.waitForFunction(()=>document.querySelector('#rotary-expression').textContent==='喜び');
+    assert.equal((await state()).inputs.rotary.counter,1);
+    await rotary.getByRole('button',{name:'Rotate counter-clockwise',exact:true}).click();
+    await page.waitForFunction(()=>document.querySelector('#rotary-expression').textContent==='通常');
+    await rotary.getByRole('button',{name:'Press rotary encoder',exact:true}).focus();
+    await page.keyboard.press('ArrowLeft');
+    await page.waitForFunction(()=>document.querySelector('#rotary-expression').textContent==='ウインク');
+    await rotary.getByRole('button',{name:'まばたき',exact:true}).click();
+    await page.waitForTimeout(100);
+    assert.ok((await state()).events.some(event=>event.message==='まばたき'));
+    await command({type:'reset'});await page.waitForTimeout(150);
     await page.locator('#auto-blink').uncheck();
     const neutral = await pixels();
     await page.locator('[data-expression="happy"]').click();
@@ -127,6 +140,7 @@ const close = () => new Promise(resolve => { server.closeAllConnections?.(); ser
     await page.waitForSelector('#connection.offline', { timeout: 10000 });
     assert.equal(await page.locator('[data-expression="happy"]').isDisabled(), true);
     assert.equal(await page.locator('#pause').isDisabled(), true);
+    assert.equal(await rotary.getByRole('button',{name:'Rotate clockwise',exact:true}).isDisabled(),true);
     assert.match(await page.locator('#run-status').textContent(), /最後/);
     assert.deepEqual(errors, []);
     console.log('PASS: display + shared servo wiring, pause/step, gaze, stop/reset, scenarios, recording/import/replay, shared reload, responsive 320/760/1440, reduced motion, connection loss.');

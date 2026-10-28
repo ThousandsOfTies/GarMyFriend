@@ -44,12 +44,19 @@ const commandFields = {
   expression: ['value', 'durationMs'], motion: ['talk', 'autoBlink', 'gazeX', 'gazeY'], blink: [],
   joint: ['id', 'angle'], sensor: ['pitch', 'roll', 'distanceMm', 'batteryV'], scenario: ['id'],
   pause: ['value'], step: ['ms'], stop: [], reset: [], record: ['action'], replay: ['recording'],
+  rotary: ['action', 'direction'],
 };
 function validateCommand(command, { allowReplay = true } = {}) {
   object(command, 'コマンド');
   if (!Object.hasOwn(commandFields, command.type)) throw new ValidationError('未対応のコマンドです。');
   fields(command, ['type', ...commandFields[command.type]], ['type']);
   switch (command.type) {
+    case 'rotary':
+      named(command.action, ['rotate','press'], 'ロータリー操作');
+      if(command.action === 'rotate') {
+        if(command.direction !== 1 && command.direction !== -1) throw new ValidationError('回転方向は -1 または 1 です。');
+      } else if(Object.hasOwn(command,'direction')) throw new ValidationError('押下に回転方向は指定できません。');
+      break;
     case 'expression': named(command.value, Object.keys(byId), '表情'); if (Object.hasOwn(command, 'durationMs')) number(command.durationMs, 0, 5000, '変化時間'); break;
     case 'motion':
       if (Object.keys(command).length < 2) throw new ValidationError('変更する動きを指定してください。');
@@ -184,6 +191,14 @@ class RobotRuntime {
   }
   _apply(command) {
     switch (command.type) {
+      case 'rotary': {
+        if(command.action === 'press') { this._apply({type:'blink'}); break; }
+        this.scenario.running = false;
+        const index=presets.expressions.findIndex(entry=>entry.id===this.expression);
+        const next=(index+command.direction+presets.expressions.length)%presets.expressions.length;
+        this._apply({type:'expression',value:presets.expressions[next].id});
+        break;
+      }
       case 'expression': this._setExpression(command.value, command.durationMs ?? 450); this._log('expression', `表情: ${byId[command.value].label}`); break;
       case 'motion':
         for (const key of ['talk', 'autoBlink', 'gazeX', 'gazeY']) if (Object.hasOwn(command, key)) this.motion[key] = command[key];

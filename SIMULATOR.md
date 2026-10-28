@@ -14,6 +14,10 @@ HTTPSアドレスは `.gar/vm/panel.json` に保存されます。VMを再起動
 
 ## 画面の操作
 
+「ノブで表情を変える」の＋で次、−で前の表情へ進みます。最後と先頭は循環します。ノブにフォーカスして矢印キーかホイールでも操作できます。ノブ本体または「まばたき」を押すと1回まばたきします。COUNTERは回転の累積値で、現在の顔は「選択中」に表示します。
+
+VMではGPIOのA/B波形をアプリが読み取ってから表情を変えます。GPIO読取プログラムはLinux GPIO v2を利用し、実機にも持ち込める構成です。`hardware/gpio.csv` の20・21・22はVMのライン番号なので、実機のピンへそのまま接続する番号ではありません。
+
 表情、まばたき、視線、口パクを変更できます。仮の6関節は角度を操作し、PCA9685とサーボの部品表示で出力を確認します。表示される部品は仮選定です。
 
 | シナリオ | 動作 |
@@ -37,6 +41,8 @@ npm run sim:command -- reset
 ```
 
 `--url https://...` で接続先を指定できます。APIは `GET /health`、`GET /api/state`、`GET /api/scenarios`、`GET /api/recording`、`GET /api/io/frame`、`POST /api/command`。画素はRGB565 big-endianの115,200 bytesです。コマンド例は `{"type":"expression","value":"happy"}`、`{"type":"joint","id":"leftHip","angle":20}`。Content-Typeはapplication/jsonです。
+
+ロータリー入力は `{"type":"rotary","action":"rotate","direction":1}`（逆方向は-1）と `{"type":"rotary","action":"press"}`。VMではこれらをGPIOの模擬入力へ渡します。`GET /api/state` の `inputs.rotary` に読取状態、累積回転、エラーを返します。
 
 ## 新しいPCでVMを作る
 
@@ -93,4 +99,6 @@ VMなしでUIだけ確認する場合は `npm run dev:open`。これはWindows�
 
 VM内で `python3 -B tests/vm-devices.py` を実行すると、このアプリの出力プロセスだけを短時間止め、キャラクターデバイスの存在、応答停止の検出、古いフレームの503応答、再開後の復旧を確認できます。
 
-2026-10-28に、ロジック14件、顔プレビューと画面操作、HTTPS経由の/dev出力、出力停止と復旧、共有Bridge 27件、SBC部品2台の独立動作を確認しました。GC9A01と従来ILI9341のCUSEビルドも成功しています。
+`python3 -B tests/vm-rotary.py` はGPIO読取だけを短時間止め、APIの指示だけでは表情が変わらず、GPIOイベントを再開して初めて反映することを確認します。他の操作と同時に実行しないでください。`test:vm` は公開HTTPSからノブ操作・逆回転・循環・押下と液晶画素までを確認します。
+
+2026-10-28に、ロジック15件、顔プレビューと画面操作、HTTPS経由の/dev出力、出力停止と復旧、共有Bridge 27件、SBC部品2台の独立動作、GPIO経由のノブ操作と読取停止試験を確認しました。GC9A01・従来ILI9341のCUSEとGPIO入力のネイティブ・ARM64ビルド、回転デコーダーのノイズ除去テストも成功しています。

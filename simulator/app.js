@@ -3,6 +3,7 @@ import '/gar-components/event-log.mjs';
 import '/gar-components/pca9685.js';
 import '/gar-components/sg90.js';
 import '/gar-components/sbc-board.mjs';
+import '/gar-components/rotary.mjs';
 
 const $ = id => document.getElementById(id);
 const presets = window.FacePresets;
@@ -52,6 +53,7 @@ async function request(url, options = {}) {
 function refreshDisabled() {
   document.querySelectorAll('[data-command]').forEach(control => { control.disabled = !connected; });
   if (!current || !connected) return;
+  $('expression-rotary').disabled = !current.inputs?.rotary?.ready;
   $('step').disabled = !current.paused;
   $('stop').disabled = current.stopped;
   document.querySelectorAll('[data-joint], [data-scenario]').forEach(control => { control.disabled = current.stopped; });
@@ -147,6 +149,10 @@ function render(state) {
   current = state;
   $('connection').textContent = state.host?.environment === 'virtualbox-linux' ? 'Linux VMに接続中' : '開発サーバーに接続中';
   const expression = expressionById[state.expression];
+  const rotary=state.inputs?.rotary;
+  if(rotary&&$('expression-rotary').value!==rotary.counter)$('expression-rotary').value=rotary.counter;
+  $('rotary-expression').textContent=expression?.label||state.expression;
+  $('rotary-status').textContent=rotary?.error?`入力確認: ${rotary.error}`:rotary?.ready?'回すと前後の表情へ。押すとまばたき。':'ロータリーの接続を確認中';
   if (state.io?.backend === 'linux-dev') {
     drawDriverFrame(state.io);
     $('io-status').textContent = state.io.error ? `ドライバ確認: ${state.io.error}` : `/dev → GAR仮想ドライバ → Bridge · ${state.io.frames}フレーム出力`;
@@ -256,6 +262,11 @@ for (const entry of presets.expressions) {
   button.append(thumb, label); button.addEventListener('click', () => send({ type: 'expression', value: entry.id }));
   $('expressions').append(button);
 }
+
+$('expression-rotary').addEventListener('gar-rotary-input',({detail})=>{
+  if(detail.type==='rotate')send({type:'rotary',action:'rotate',direction:detail.direction});
+  else if(detail.type==='press')send({type:'rotary',action:'press'});
+});
 $('pause').addEventListener('click', () => send({ type: 'pause', value: !current.paused }));
 $('step').addEventListener('click', () => send({ type: 'step', ms: 100 }));
 $('stop').addEventListener('click', () => send({ type: 'stop' }));
