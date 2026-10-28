@@ -2,7 +2,7 @@
 
 ## 構成
 
-対象はOrange Pi Zero 2W、ARM64、1GBとGC9A01 240×240 RGB565。実機はArmbian上で専用サービスを導入し、実GPIO入力とSPI書き込みまで確認済みです。液晶での実表示は確認中です。VMはUbuntu 24.04 x86_64、1GBでLinuxの入出力契約を検証し、ARM CPUの性能や電気特性は再現しません。
+対象はOrange Pi Zero 2W、ARM64、1GBとGC9A01互換の240×240 RGB565液晶です。実機はArmbian上で専用サービスを導入し、実GPIO入力、SPI書き込みと液晶の顔表示を確認済みです。VMはUbuntu 24.04 x86_64、1GBでLinuxの入出力契約を検証し、ARM CPUの性能や電気特性は再現しません。
 
 実行アプリは `application/face.cjs`。`face-runtime.cjs` が8表情の循環と450msの補間、まばたきを処理し、共有のGPIO読取プログラムから回転・押下を受けます。`display-output.cjs` は描画値をC++出力プロセスへ送り、`device-output.cpp` がFaceCoreでRGB565を描いてSPIへ書きます。I²C・サーボ・模擬センサー・シナリオ・記録再生は含めません。
 
@@ -27,6 +27,6 @@ VMは `/dev/gpiochip0` のDC=16、A=20、B=21、SW=22と `/dev/spidev0.0` を使
 
 2026-10-28に実機のノブをKY-040、液晶の端子をRST/CS/DC/SDA/SCL/GND/VCCと確認しました。液晶の製品型番・電源回路・コントローラーの同定は未完了です。採用する物理ピンの計画と確認状態は `hardware/WIRING.md` と `hardware/connections.csv` に保存します。実機のchip/lineはArmbian上で照合し、`hardware/orangepi-zero2w/` に記録しています。
 
-実機はgpiochip1（300b000.pinctrl）とSPI1 CS0を使い、内部プルアップ付きのノブ読取とRST制御後のGC9A01初期化を行います。16MHzでのSPI書き込み完了と左右の回転・押下を確認しました。液晶は未表示で、電源・配線・モジュール仕様の確認が残ります。書き込み完了を、表示の成功や性能確認として扱いません。
+実機はgpiochip1（300b000.pinctrl）とSPI1 CS0を使い、内部プルアップ付きのノブ読取とRST制御後のGC9A01初期化を行います。16MHzでのSPI書き込み完了と左右の回転・押下を確認しました。GND接続の改善とSCLの挿し間違いの修正後、ユーザーが顔表示を確認しました。表示の確認と、書き込み完了や性能測定は区別します。
 
 GC9A01モデルはCASET/PASET/RAMWRを中心とするRGB565サブセットです。ガンマ・電気的タイミング・全方向設定を再現するモデルではありません。

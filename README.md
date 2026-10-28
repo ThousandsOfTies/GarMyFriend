@@ -52,7 +52,7 @@ Cloudflare Quick TunnelのURLは再発行すると変わります。開発用の
 | `infra/virtualbox/`、`tools/vm.py` | 専用VMとサービスの構築・配布 |
 | `infra/orangepi-zero2w/` | 実機のARM64ビルド、SPI有効化、専用ユーザーでの自動起動 |
 
-クローンは `git clone --recurse-submodules https://github.com/ThousandsOfTies/GarMyFriend.git`。実行アプリはNode.js 18以上とLinuxのGPIO v2・SPIを利用します。実機ではNode.js 24.22.1 ARM64を使用し、GPIO/SPIの割り当てとノブ入力まで確認済みです。液晶の実表示は確認中です。
+クローンは `git clone --recurse-submodules https://github.com/ThousandsOfTies/GarMyFriend.git`。実行アプリはNode.js 18以上とLinuxのGPIO v2・SPIを利用します。実機ではNode.js 24.22.1 ARM64を使用し、GPIO/SPIの割り当て、ノブ入力、液晶の顔表示を確認済みです。
 
 ## 検証
 

@@ -38,7 +38,7 @@
   "verification": {
     "cpuEmulation": false,
     "electricalSimulation": false,
-    "physicalDisplay": false,
+    "physicalDisplay": true,
     "physicalGpioInput": true,
     "physicalSpiWrites": true,
     "devicePerformanceMeasured": false
