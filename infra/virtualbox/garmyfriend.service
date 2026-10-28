@@ -1,23 +1,19 @@
 [Unit]
-Description=GarMyFriend simulation application
-After=network-online.target garmyfriend-devices.service
+Description=GarMyFriend face application
+After=garmyfriend-devices.service
 Requires=garmyfriend-devices.service
-Wants=network-online.target
-ConditionPathExists=/home/gar/GarMyFriend/simulation/server.cjs
+ConditionPathExists=/home/gar/GarMyFriend/application/face.cjs
 
 [Service]
 Type=simple
 User=gar
 WorkingDirectory=/home/gar/GarMyFriend
-Environment=GAR_SIM_ENVIRONMENT=virtualbox-linux
-Environment=ROBOT_IO_BACKEND=linux-dev
-EnvironmentFile=-/home/gar/.config/garmyfriend/panel.env
-ExecStart=/usr/bin/node simulation/server.cjs --port 8773
+ExecStart=/usr/bin/node application/face.cjs
 Restart=on-failure
 RestartSec=2
 NoNewPrivileges=true
 PrivateTmp=true
-MemoryMax=384M
+MemoryMax=128M
 
 [Install]
 WantedBy=multi-user.target

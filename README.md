@@ -1,70 +1,60 @@
 # GarMyFriend
 
-Orange Pi Zero 2W（Allwinner H618・ARM64・RAM 1GB）とGC9A01円形液晶を使うロボットの開発環境です。アプリをVirtualBoxのLinux VMで動かし、HTTPSのWebPanelから操作します。
+GC9A01の円形ディスプレイとロータリーエンコーダーを使う、ロボットの顔アプリです。対象はOrange Pi Zero 2W（H618・ARM64・RAM 1GB）。開発時はVirtualBoxのLinux上で動かし、HTTPSのWebPanelを物理部品の代わりに使います。
+
+画面に置くのは「顔のディスプレイ」と「ノブで表情を変える」の2点です。ノブの回転で8表情を循環し、押下でまばたきします。
 
 ```text
-ブラウザー / CLI → HTTPS → VM内のアプリ
-                             ↓ C++描画・PWM制御
-                  /dev/spidev0.0  /dev/i2c-1  /dev/gpiochip0
-                             ↓ CUSE / gpio-sim
-                       GAR仮想デバイス → Bridge → WebPanel
+WebPanelのノブ → Bridge → gpio-sim → /dev/gpiochip0
+                                            ↓
+                              独立した顔アプリ（表情・アニメーション）
+                                            ↓
+WebPanelの液晶 ← Bridge ← GC9A01仮想ドライバ ← /dev/spidev0.0
 ```
 
-顔の画素とサーボのPWM表示は、実際に仮想デバイスが受け取った出力から生成します。顔をブラウザーで描き直す方式は、開発用のロジック試験に限ります。
+**表情を決めるのは実行アプリです。** WebPanelとBridgeは、部品の入力信号とドライバが受け取った画素を受け渡します。顔アプリはWebPanelを停止しても動作します。
 
-## 開く
+## 使う
 
-このPCではVMを構築済みです。プロジェクトのフォルダーで実行します。
+このPCでは専用VM `gar-myfriend-sim` を構築済みです。
 
 ```powershell
 npm run vm:start
 npm run vm:open
 ```
 
-HTTPS URLは `.gar/vm/panel.json` に保存されます。トンネルを停止した後やVM再起動後は `npm run vm:publish` で公開し直します。Cloudflare Quick Tunnelを使う開発用URLで、再発行すると変わります。URLを知っている人は模擬ロボットを操作できます。実機接続や秘密情報を扱う常設環境にする場合は、認証付きの公開方法へ切り替えます。
+URLは `.gar/vm/panel.json` に保存します。トンネルやVMの再起動後は `npm run vm:publish` で開発用HTTPS URLを発行し直してください。
 
 ```powershell
-npm run vm:status   # VM・アプリ・仮想デバイスの状態
-npm run vm:deploy   # 変更したソースを転送して再ビルド
-npm run vm:publish # HTTPS URLを発行・接続確認
-npm run vm:stop    # 専用VMを正常終了
+npm run vm:deploy   # 変更を転送して再ビルド
+npm run vm:status   # アプリ・部品・パネルの状態
+npm run vm:stop     # 専用VMを終了
 ```
 
-8表情、まばたき、視線、口パク、仮の6関節、模擬センサー、4シナリオ、操作の記録・保存・再生を試せます。関節・PCA9685・SG90は仮構成で、採用部品や歩行能力の確定ではありません。
+Cloudflare Quick TunnelのURLは再発行すると変わります。開発用の模擬部品を公開しており、実機はまだ接続していません。
 
-右側のロータリーは共有の `rotary.mjs` です。＋／−、ノブを選択して矢印キー・ホイールで表情を前後に切り替え、押すとまばたきします。8表情を循環し、表情ボタンで選んだ顔から続けて切り替えられます。
+## ソースの役割
 
-VMではノブ操作 → GAR Bridge → カーネルgpio-sim → `/dev/gpiochip0` → 共有GPIO入力プログラム → アプリ → SPI液晶出力、という経路を通します。GPIO読取とノイズを除く回転デコードはgar-tools、表情の割り当てはGarMyFriendに置いています。
+| 場所 | 役割 |
+| --- | --- |
+| `application/` | 表情の選択、アニメーション、GPIO入力、SPIへの描画出力。HTTPやWebPanelに依存しない |
+| `simulation/` | 仮想GPIOへの入力と、ドライバが受け取った画素の中継。表情の意味を持たない |
+| `simulator/` | 共有の液晶・ロータリー部品だけを配置するWebPanel |
+| `hardware/` | VM内のGPIO・SPI割り当て |
+| `sources/gar-tools/` | 共有Web Components、GPIO入力、CUSEドライバ、汎用Bridgeのsubmodule |
+| `shared/expressions.json`、`firmware/` | 表情データとC++描画コア |
+| `infra/virtualbox/`、`tools/vm.py` | 専用VMとサービスの構築・配布 |
 
-## リポジトリの分担
-
-- `application/`：C++の描画とLinuxデバイスへの出力。
-- `simulation/`：時間・表情・関節・シナリオ・操作記録とWeb API。
-- `simulator/`：Product固有のWebPanelと部品の接続処理。
-- `hardware/`：VM内の仮想SPI・I²C・GPIO割り当て。
-- `infra/virtualbox/`、`tools/vm.py`：専用VM、デバイス、公開、配布の手順。
-- `sources/gar-tools/`：共通部品とドライバを使うGit submodule。
-- `shared/expressions.json`、`firmware/FaceCore.h`：顔の形と描画コア。
-- `preview/`：従来の顔だけの試作。直接開けます。
-
-共通のSBC表示部品、GC9A01用CUSEドライバ、Bridge対応はgar-tools側へ保存します。クローン時はsubmoduleも取得してください。
-
-```powershell
-git clone --recurse-submodules https://github.com/ThousandsOfTies/GarMyFriend.git
-```
+クローンは `git clone --recurse-submodules https://github.com/ThousandsOfTies/GarMyFriend.git`。実行アプリはNode.js 18以上とLinuxのGPIO v2・SPIを利用し、WebPanelを必要としません。実機では液晶の初期化とGPIO/SPI割り当てを確認してから接続します。
 
 ## 検証
 
-WindowsにNode.js 18以上とMicrosoft Edge、VM操作にPython 3.11以上、OpenSSH、VirtualBox 7を使います。
-
 ```powershell
 npm ci
-npm test           # ロジック・従来プレビュー・開発用画面
-npm run test:vm    # 公開HTTPSから実際の/dev経路を通す検証
+npm test
+npm run test:vm
 ```
 
-`test:vm` は模擬ロボットの状態を初期化し、顔の画素一致、PWM変更、停止、復帰を確認します。実機には接続しません。
+ローカル試験では表情処理、Bridgeが表情を判断しないこと、2部品の画面と入出力を確認します。VM試験は実際の仮想GPIO・SPIと画面の画素一致を確認します。VM内の `python3 -B tests/vm-parts.py` は、顔アプリを止めたときにBridgeだけでは表情を変えられず、WebPanelを止めてもアプリが動くことを確認します。
 
-[操作・再構築手順](SIMULATOR.md) / [設計と実機へ進む条件](DESIGN.md)
-
-VMはUbuntu 24.04、x86_64、RAM 1GB、1 vCPUです。Orange PiのARM CPU速度・電気特性・歩行物理は再現しません。実機はArmbian起動とUSBログインまで確認済みで、液晶とモーターの接続は未確認です。
+[操作・再構築手順](SIMULATOR.md) / [設計](DESIGN.md)

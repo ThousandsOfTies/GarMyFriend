@@ -1,6 +1,6 @@
 [Unit]
 Description=GarMyFriend development HTTPS tunnel
-After=network-online.target garmyfriend.service
+After=network-online.target garmyfriend-panel.service
 Wants=network-online.target
 
 [Service]

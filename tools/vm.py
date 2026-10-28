@@ -30,7 +30,7 @@ def scp(source,destination):
 
 def archive():
     STATE.mkdir(parents=True,exist_ok=True)
-    items=['application','simulation','firmware','shared/expressions.json','preview/face.js','preview/presets.js','simulator','config','hardware','infra','tests/vm-devices.py','tests/vm-rotary.py','sources/gar-tools/targets/linux-device/runtime','sources/gar-tools/web-simulator/components','sources/gar-tools/web-simulator/tests','sources/gar-tools/web-simulator/serve.py']
+    items=['application','simulation','firmware','shared/expressions.json','simulator','hardware','infra','tests/vm-parts.py','sources/gar-tools/targets/linux-device/runtime/gc9a01-stub','sources/gar-tools/targets/linux-device/runtime/ili9341-stub','sources/gar-tools/targets/linux-device/runtime/rotary-input','sources/gar-tools/targets/linux-device/runtime/web-bridge','sources/gar-tools/web-simulator/components/display.mjs','sources/gar-tools/web-simulator/components/framebuffer.mjs','sources/gar-tools/web-simulator/components/rotary.mjs']
     def keep(info):
         parts=Path(info.name).parts
         if '.git' in parts or '__pycache__' in parts or 'node_modules' in parts or info.name.startswith('simulator/gar-components'):return None
@@ -92,7 +92,7 @@ def main():
     else:
         info=run([VBOX,'showvminfo',NAME,'--machinereadable'],capture=True).stdout
         print('\n'.join(line for line in info.splitlines() if line.startswith(('VMState=','memory=','cpus='))))
-        if 'VMState="running"' in info:ssh('systemctl is-active garmyfriend garmyfriend-devices garmyfriend-tunnel; curl -fsS http://127.0.0.1:8773/health')
+        if 'VMState="running"' in info:ssh('systemctl is-active garmyfriend garmyfriend-panel garmyfriend-devices garmyfriend-tunnel; curl -fsS http://127.0.0.1:8773/health')
 
 if __name__=='__main__':
     try:main()

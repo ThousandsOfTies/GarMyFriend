@@ -6,7 +6,7 @@ const { spawn } = require('node:child_process');
 /** Product adapter. The shared reader owns GPIO decoding; only the runtime
  * assigns an encoder detent or press to a face action. */
 class RotaryInput {
-  constructor(root, onInput) {
+  constructor(root, onInput, onError) {
     this.ready = false; this.error = null; this.counter = 0; this.closed = false;
     const rows = fs.readFileSync(path.join(root,'hardware/gpio.csv'),'utf8').trim().split(/\r?\n/).map(row=>row.split(','));
     const headers=rows.shift();
@@ -34,21 +34,9 @@ class RotaryInput {
       }
     });
     this.child.stderr.on('data',chunk=>{this.error=String(chunk).trim().slice(-300);});
-    this.child.on('error',error=>{this.error=error.message;this.ready=false;});
-    this.child.on('close',code=>{this.ready=false;if(!this.closed)this.error=this.error||`GPIO入力が終了しました (${code})`;});
+    this.child.on('error',onError);
+    this.child.on('close',code=>{if(!this.closed)onError(new Error(this.error||`GPIO input exited (${code})`));});
   }
-  async inject(command){
-    if(!this.ready)throw new Error(this.error||'ロータリーのGPIO入力待ちです');
-    const route=command.action==='rotate'?'rotate':'press';
-    const response=await fetch(`http://127.0.0.1:8080/api/rotary/${route}`,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(route==='rotate'?{direction:command.direction}:{}),signal:AbortSignal.timeout(2000),
-    });
-    if(!response.ok)throw new Error(`仮想GPIO Bridge: HTTP ${response.status}`);
-    const result=await response.json();
-    if(!result.ok)throw new Error('仮想GPIO入力が受理されませんでした');
-  }
-  status(){return {backend:'gpio-v2',ready:this.ready,error:this.error,counter:this.counter,chip:this.chip,lines:this.lines};}
   close(){this.closed=true;this.child.kill('SIGTERM');}
 }
 module.exports={RotaryInput};

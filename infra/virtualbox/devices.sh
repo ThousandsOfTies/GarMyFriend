@@ -29,13 +29,12 @@ while [ ! -S "$GAR_HW_SIM_SOCK" ]; do
   attempt=$((attempt+1)); [ "$attempt" -lt 100 ] || exit 1; sleep 0.1
 done
 "$APP/build/cuse_spi_gc9a01" -f -s --devname=spidev0.0 --dc-line=16 & pids="$pids $!"
-"$APP/build/cuse_i2c" -f -s --devname=i2c-1 & pids="$pids $!"
 attempt=0
-while [ ! -c /dev/spidev0.0 ] || [ ! -c /dev/i2c-1 ]; do
+while [ ! -c /dev/spidev0.0 ]; do
   attempt=$((attempt+1)); [ "$attempt" -lt 100 ] || exit 1; sleep 0.1
 done
-chgrp gar /dev/gpiochip0 /dev/spidev0.0 /dev/i2c-1
-chmod 0660 /dev/gpiochip0 /dev/spidev0.0 /dev/i2c-1
+chgrp gar /dev/gpiochip0 /dev/spidev0.0
+chmod 0660 /dev/gpiochip0 /dev/spidev0.0
 systemd-notify --ready
 while :; do
   for pid in $pids; do kill -0 "$pid" 2>/dev/null || exit 1; done

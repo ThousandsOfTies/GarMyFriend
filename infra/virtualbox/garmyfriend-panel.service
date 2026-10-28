@@ -1,0 +1,21 @@
+[Unit]
+Description=GarMyFriend display and rotary replacement panel
+After=network-online.target garmyfriend-devices.service
+Requires=garmyfriend-devices.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=gar
+WorkingDirectory=/home/gar/GarMyFriend
+Environment=GAR_SIM_ENVIRONMENT=virtualbox-linux
+EnvironmentFile=-/home/gar/.config/garmyfriend/panel.env
+ExecStart=/usr/bin/node simulation/server.cjs --port 8773
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+MemoryMax=128M
+
+[Install]
+WantedBy=multi-user.target
