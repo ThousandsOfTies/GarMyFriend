@@ -1,0 +1,4 @@
+component_id,name,kind,part_number,description
+orangepi_zero2w,Orange Pi Zero 2W,board,Orange Pi Zero 2W,H618 ARM64 1GB board
+round_lcd_7pin,Round SPI LCD 7-pin,display,,Unknown module part number; GC9A01 240x240 assumed and unverified; supply compatibility unverified
+ky040_encoder,Rotary encoder,input,KY-040,User confirmed part number and CLK DT SW + GND terminals; board manufacturer and pull-ups unverified

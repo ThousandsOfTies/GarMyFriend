@@ -13,6 +13,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable garmyfriend.service garmyfriend-panel.service
 # Remove obsolete Product modules and the old actuator configuration on upgrades.
 rm -f simulation/runtime.cjs simulation/linux-devices.cjs simulation/rotary-input.cjs hardware/i2c.csv build/cuse_i2c
+rm -f hardware/modules.json hardware/pin-plan.json
 sudo systemctl restart garmyfriend-devices.service
 sudo systemctl restart garmyfriend.service
 sudo systemctl restart garmyfriend-panel.service

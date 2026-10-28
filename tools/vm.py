@@ -65,7 +65,7 @@ def publish(open_page=False):
         if matches:url=matches[-1];break
         time.sleep(1)
     if not url:raise RuntimeError('HTTPS tunnel did not become ready')
-    ssh("mkdir -p /home/gar/.config/garmyfriend && printf '%s\\n' 'ROBOT_PANEL_ORIGIN="+url+"' > /home/gar/.config/garmyfriend/panel.env && sudo systemctl restart garmyfriend.service")
+    ssh("mkdir -p /home/gar/.config/garmyfriend && printf '%s\\n' 'ROBOT_PANEL_ORIGIN="+url+"' > /home/gar/.config/garmyfriend/panel.env && sudo systemctl restart garmyfriend-panel.service")
     error=None
     for attempt in range(30):
         try:

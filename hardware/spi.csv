@@ -1,2 +1,2 @@
-name,bus,cs,device,mode,max_speed_hz,driver,sim,comment
-display,0,0,/dev/spidev0.0,0,24000000,gc9a01,gc9a01,GC9A01 240x240 virtual panel
+name,bus,chip_select,dev,mode,max_speed_hz,driver,sim,description
+display,0,0,/dev/spidev0.0,0,24000000,gc9a01,gc9a01,GC9A01 240x240 VM display; physical module identity unverified

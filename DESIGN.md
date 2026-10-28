@@ -25,7 +25,7 @@ WebPanelを終了しても、アプリの表情・描画処理は継続します
 
 VMは `/dev/gpiochip0` のDC=16、A=20、B=21、SW=22と `/dev/spidev0.0` を使います。これらは仮想ライン番号で、Orange Piの物理端子番号ではありません。
 
-2026-10-28に実機のノブをKY-040、液晶の端子をRST/CS/DC/SDA/SCL/GND/VCCと確認しました。液晶の製品型番・電源回路・コントローラーの同定は未完了です。採用する物理ピンの計画と確認状態は `hardware/WIRING.md` と `hardware/pin-plan.json` に保存します。実機のchip/lineはArmbian上で確認してから設定します。
+2026-10-28に実機のノブをKY-040、液晶の端子をRST/CS/DC/SDA/SCL/GND/VCCと確認しました。液晶の製品型番・電源回路・コントローラーの同定は未完了です。採用する物理ピンの計画と確認状態は `hardware/WIRING.md` と `hardware/connections.csv` に保存します。実機のchip/lineはArmbian上で確認してから設定します。
 
 実機ではGC9A01モジュールの型番、初期化シーケンス、SPIバス、DC信号、ロータリーの端子・プルアップを確認します。単色・静止画で向きと色順序を確認してから、同じ顔アプリを動かします。仮のSPI 24MHzは実機で確認した速度ではありません。
 

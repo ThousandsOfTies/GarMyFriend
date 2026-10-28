@@ -23,17 +23,7 @@
     "spiClockNote": "転送時間の計算用の仮定。実機の対応速度・配線は未確認。",
     "pins": null,
     "connected": false,
-    "modulePartNumber": null,
-    "controllerVerified": false,
-    "reportedTerminals": [
-      "RST",
-      "CS",
-      "DC",
-      "SDA",
-      "SCL",
-      "GND",
-      "VCC"
-    ]
+    "controllerVerified": false
   },
   "io": {
     "backend": "linux-dev",
@@ -51,17 +41,10 @@
     "physicalDisplay": false,
     "devicePerformanceMeasured": false
   },
-  "modulesFile": "hardware/modules.json",
-  "physicalPinPlan": "hardware/pin-plan.json",
-  "input": {
-    "model": "KY-040",
-    "partNumberVerifiedByUser": true,
-    "terminals": [
-      "CLK",
-      "DT",
-      "SW",
-      "+",
-      "GND"
-    ]
+  "hardwareFiles": {
+    "components": "hardware/components.csv",
+    "connections": "hardware/connections.csv",
+    "gpio": "hardware/gpio.csv",
+    "spi": "hardware/spi.csv"
   }
 }

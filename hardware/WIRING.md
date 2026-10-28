@@ -3,6 +3,8 @@
 **下記の番号は40ピンヘッダーの物理ピン番号です。** GPIO line offset、wiringOP番号、Raspberry PiのBCM番号とは異なります。
 基板の1番ピンの表示を確認してから数えてください。電源を外した状態で配線します。
 
+配線の正本は [`connections.csv`](connections.csv)、型番は [`components.csv`](components.csv) です。この文書はその説明用の表です。
+
 ## 部品の記録
 
 - ロータリー: **[KY-040](modules/KY-040.md)**、端子 CLK / DT / SW / ＋ / GND。
