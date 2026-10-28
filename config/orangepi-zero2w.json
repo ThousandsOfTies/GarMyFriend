@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "orangepi-zero2w-gc9a01",
+  "name": "Orange Pi Zero 2W · 1GB",
+  "board": { "model": "Orange Pi Zero 2W", "soc": "Allwinner H618", "architecture": "arm64", "ramMiB": 1024, "os": "Armbian / Debian 13 minimal", "bootVerified": true, "usbConsoleVerified": true },
+  "display": { "controller": "GC9A01", "width": 240, "height": 240, "format": "RGB565", "shape": "round", "targetFps": 20, "spiClockHz": 24000000, "spiClockVerified": false, "spiClockNote": "転送時間の計算用の仮定。実機の対応速度・配線は未確認。", "pins": null, "connected": false },
+  "motion": { "model": "illustrative-six-joint-biped", "provisional": true, "physics": false, "actuatorModel": null, "controller": null, "note": "6関節は操作検証用の仮構成。サーボ型番・機構・配線・歩行能力は未確定。" },
+  "io": { "backend": "linux-dev", "physicalWrites": false, "sensors": "injected", "network": "vm-loopback-with-https-tunnel", "devices": ["/dev/spidev0.0", "/dev/i2c-1", "/dev/gpiochip0"], "gpioMapping": "virtual-only" },
+  "limits": { "jointSpeedDegPerSec": 80, "tiltStopDegrees": 30, "lowBatteryVolts": 3.4, "nearDistanceMm": 120 },
+  "verification": { "cpuEmulation": false, "electricalSimulation": false, "physicalDisplay": false, "walkingValidated": false, "devicePerformanceMeasured": false }
+}

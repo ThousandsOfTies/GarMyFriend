@@ -1,0 +1,2 @@
+name,bus,address,device,driver,sim,comment
+servo,1,0x40,/dev/i2c-1,pca9685,pca9685,Provisional actuator interface; not a physical component selection

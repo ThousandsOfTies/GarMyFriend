@@ -1,0 +1,2 @@
+name,line,direction,role,active,pull,comment
+lcd_dc,16,output,display,high,,Virtual GPIO only; physical Orange Pi pin mapping is not selected

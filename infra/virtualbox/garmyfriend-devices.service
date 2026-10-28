@@ -1,0 +1,15 @@
+[Unit]
+Description=GarMyFriend GAR CUSE devices and hardware bridge
+After=network.target
+
+[Service]
+Type=notify
+NotifyAccess=all
+ExecStart=/bin/sh /home/gar/GarMyFriend/infra/virtualbox/devices.sh
+Restart=on-failure
+RestartSec=3
+TimeoutStartSec=45
+KillMode=control-group
+
+[Install]
+WantedBy=multi-user.target

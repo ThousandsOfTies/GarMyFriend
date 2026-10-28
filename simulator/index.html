@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#eeede7">
+  <title>GarMyFriend — ロボの実験室</title>
+  <link rel="stylesheet" href="/simulator/style.css">
+  <script src="/preview/presets.js" defer></script>
+  <script src="/preview/face.js" defer></script>
+  <script type="module" src="/simulator/app.js"></script>
+</head>
+<body>
+  <main>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="GarMyFriend ロボの実験室"><span class="brand-icon" aria-hidden="true">◉</span><span>GarMyFriend<small>Orange Pi Zero 2W / GC9A01</small></span></a>
+      <div class="mode-label"><span class="mode-dot"></span>シミュレーション<span class="mode-divider">/</span>実機未接続</div>
+    </header>
+    <section class="intro">
+      <div><p class="eyebrow">つくる前に、動かしてみる。</p><h1>ロボの実験室<span class="version">01</span></h1><p class="intro-copy">表情と動き、小さな部品のつながりを確かめる。</p></div>
+      <div class="runtime-status"><span id="connection" class="connection" role="status">接続を確認中</span><span class="clock-label">SIM TIME <output id="clock">00:00.0</output></span></div>
+    </section>
+    <div class="toolbar" aria-label="シミュレーションの実行">
+      <div class="toolbar-group"><button id="pause" data-command type="button" disabled>一時停止</button><button id="step" data-command type="button" disabled>100 ms進める</button><button id="reset" data-command type="button" disabled>初期状態へ</button></div>
+      <p id="run-status">サーバーに接続しています</p><button id="stop" class="danger" data-command type="button" disabled><span aria-hidden="true">■</span> 動作を止める</button>
+    </div>
+    <div id="notice" class="notice" role="status" hidden></div>
+    <div class="workbench">
+      <div class="devices-column">
+        <section class="device-panel screen-panel" aria-labelledby="screen-title">
+          <div class="section-head"><div><p class="eyebrow">01 / DISPLAY</p><h2 id="screen-title">顔のディスプレイ</h2></div><span class="part-tag">GC9A01 · 240 × 240</span></div>
+          <div class="display-stage">
+            <div class="module-screw screw-tl"></div><div class="module-screw screw-tr"></div><div class="module-screw screw-bl"></div><div class="module-screw screw-br"></div>
+            <div class="screen-bezel"><gar-display id="screen" width="240" height="240" label="GC9A01に表示するロボットの顔"></gar-display></div>
+            <div class="screen-caption"><span id="expression-name">通常</span><span>RGB565 / ROUND LCD</span></div>
+          </div>
+          <div class="display-pins" aria-label="表示モジュールの端子。配線は未確定"><span>VCC</span><span>GND</span><span>SCL</span><span>SDA</span><span>DC</span><span>CS</span><span>RST</span></div>
+          <div class="part-note"><span id="io-status">ドライバの出力を確認中</span></div>
+        </section>
+        <section class="device-panel controller-panel" aria-labelledby="board-title">
+          <div class="section-head"><div><p class="eyebrow">02 / CONTROLLER</p><h2 id="board-title">Orange Pi Zero 2W</h2></div><span class="part-tag">採用ボード</span></div>
+          <div class="board-overview">
+            <gar-sbc-board id="controller-board" label="Orange Pi Zero 2W" soc="Allwinner H618" memory="1 GB DDR4" architecture="ARM64 Linux" readonly></gar-sbc-board>
+            <dl class="board-facts"><div><dt>実機の環境</dt><dd>ARM64 Linux</dd></div><div><dt>メモリー</dt><dd>1 GB</dd></div><div><dt>USB0</dt><dd>PCからの文字操作</dd></div><div><dt>USB1</dt><dd>キーボード</dd></div></dl>
+          </div>
+          <p class="small-note">基板は模式図です。シミュレーターで共通の動作ロジックを実行しています。USBログインと、この画面の通信は別です。</p>
+          <details class="budget"><summary>表示負荷の目安を見る<span>実機性能は未計測</span></summary><dl class="budget-grid"><div><dt>1フレーム</dt><dd id="frame-bytes">—</dd></div><div><dt>2枚のバッファー</dt><dd id="double-buffer">—</dd></div><div><dt>設定した更新周期</dt><dd id="target-fps">—</dd></div><div><dt>転送の理論最小時間</dt><dd id="transfer-time">—</dd></div><div><dt>仮定したSPI速度</dt><dd id="spi-speed">—</dd></div><div><dt id="host-memory-label">開発用サーバー使用量</dt><dd id="host-memory">—</dd></div></dl><p class="small-note">転送時間は画素データ量だけの計算です。描画・通信処理の時間は含みません。実行サーバーの使用量をOrange Piの実測値として扱いません。</p></details>
+        </section>
+        <section class="device-panel body-panel" aria-labelledby="joints-title">
+          <div class="section-head"><div><p class="eyebrow">03 / ACTUATORS</p><h2 id="joints-title">関節を動かす</h2></div><span class="part-tag provisional">仮の6関節</span></div>
+          <p class="section-description">左右の股・膝・足首を仮定した動作確認です。サーボ・駆動基板は未選定。重力や接地を計算する歩行シミュレーションは含みません。</p>
+          <details class="pwm-details"><summary>PWM駆動基板の表示<span>PCA9685の仮モデル</span></summary><gar-pca9685 id="virtual-pwm" device="virtual-pwm" address="64" appearance="channels"></gar-pca9685><p class="small-note">SG90とPCA9685はGAR共有部品による表示用モデルです。実機の採用部品・校正値・電源構成を決定するものではありません。</p></details>
+          <div class="joint-grid">
+            <article class="joint-part"><h3>左・股 <span>CH0</span></h3><gar-sg90 id="leftHip" controller-id="virtual-pwm" channel="0" appearance="compact"></gar-sg90><label for="joint-leftHip">関節角 <output id="joint-leftHip-value">0°</output></label><input id="joint-leftHip" data-joint="leftHip" data-command type="range" min="-60" max="60" step="1" value="0" disabled></article>
+            <article class="joint-part"><h3>左・膝 <span>CH1</span></h3><gar-sg90 id="leftKnee" controller-id="virtual-pwm" channel="1" appearance="compact"></gar-sg90><label for="joint-leftKnee">関節角 <output id="joint-leftKnee-value">0°</output></label><input id="joint-leftKnee" data-joint="leftKnee" data-command type="range" min="0" max="90" step="1" value="0" disabled></article>
+            <article class="joint-part"><h3>左・足首 <span>CH2</span></h3><gar-sg90 id="leftAnkle" controller-id="virtual-pwm" channel="2" appearance="compact"></gar-sg90><label for="joint-leftAnkle">関節角 <output id="joint-leftAnkle-value">0°</output></label><input id="joint-leftAnkle" data-joint="leftAnkle" data-command type="range" min="-60" max="60" step="1" value="0" disabled></article>
+            <article class="joint-part"><h3>右・股 <span>CH3</span></h3><gar-sg90 id="rightHip" controller-id="virtual-pwm" channel="3" appearance="compact"></gar-sg90><label for="joint-rightHip">関節角 <output id="joint-rightHip-value">0°</output></label><input id="joint-rightHip" data-joint="rightHip" data-command type="range" min="-60" max="60" step="1" value="0" disabled></article>
+            <article class="joint-part"><h3>右・膝 <span>CH4</span></h3><gar-sg90 id="rightKnee" controller-id="virtual-pwm" channel="4" appearance="compact"></gar-sg90><label for="joint-rightKnee">関節角 <output id="joint-rightKnee-value">0°</output></label><input id="joint-rightKnee" data-joint="rightKnee" data-command type="range" min="0" max="90" step="1" value="0" disabled></article>
+            <article class="joint-part"><h3>右・足首 <span>CH5</span></h3><gar-sg90 id="rightAnkle" controller-id="virtual-pwm" channel="5" appearance="compact"></gar-sg90><label for="joint-rightAnkle">関節角 <output id="joint-rightAnkle-value">0°</output></label><input id="joint-rightAnkle" data-joint="rightAnkle" data-command type="range" min="-60" max="60" step="1" value="0" disabled></article>
+          </div>
+          <p class="small-note">スライダーは関節の中立を0°とします。SG90部品の表示は軸角度（関節角＋90°）です。</p>
+        </section>
+      </div>
+      <aside class="controls-column" aria-label="表情と環境の操作">
+        <section class="control-panel"><div class="section-head"><h2>表情を選ぶ</h2><span class="index-label">FACE</span></div><div id="expressions" class="expression-grid" role="group" aria-label="8つの表情"></div><div class="motion-controls"><label class="check-row"><span>自然なまばたき</span><input id="auto-blink" data-command type="checkbox" checked disabled></label><label class="check-row"><span>口パク <small>音声なし</small></span><input id="talk" data-command type="checkbox" disabled></label><button type="button" id="blink" data-command disabled>一度まばたきする</button><div class="range-row"><label for="gaze-x">視線・左右 <output id="gaze-x-value">0</output></label><input id="gaze-x" data-command type="range" min="-8" max="8" step="1" value="0" disabled></div><div class="range-row"><label for="gaze-y">視線・上下 <output id="gaze-y-value">0</output></label><input id="gaze-y" data-command type="range" min="-8" max="8" step="1" value="0" disabled></div></div></section>
+        <section class="control-panel"><div class="section-head"><h2>動きを試す</h2><span class="index-label">SCENARIO</span></div><p class="small-note">同じ入力と時間で、反応を繰り返し確認。</p><div id="scenarios" class="scenario-list"></div><p id="scenario-status" class="scenario-status">シナリオ停止中</p></section>
+        <section class="control-panel"><div class="section-head"><h2>環境を変える</h2><span class="index-label">SIM INPUT</span></div><p class="small-note">センサーの仮想入力です。実機からの測定値ではありません。</p><div class="range-row"><label for="pitch">前後の傾き <output id="pitch-value">0°</output></label><input id="pitch" data-command data-sensor="pitch" type="range" min="-90" max="90" step="1" value="0" disabled></div><div class="range-row"><label for="roll">左右の傾き <output id="roll-value">0°</output></label><input id="roll" data-command data-sensor="roll" type="range" min="-90" max="90" step="1" value="0" disabled></div><div class="range-row"><label for="distance">前方までの距離 <output id="distance-value">600 mm</output></label><input id="distance" data-command data-sensor="distanceMm" type="range" min="30" max="2000" step="10" value="600" disabled></div><div class="range-row"><label for="battery">電池電圧 <output id="battery-value">4.0 V</output></label><input id="battery" data-command data-sensor="batteryV" type="range" min="3" max="4.2" step="0.05" value="4" disabled></div><p class="input-rule">傾き・近接・低電圧への反応を確認できます。しきい値と電池モデルは試作用です。</p></section>
+        <section class="control-panel record-panel"><div class="section-head"><h2>操作を残す</h2><span class="index-label">REPLAY</span></div><p class="small-note">操作とタイミングを記録し、同じ動きを再生します。</p><div class="record-actions"><button type="button" id="record" data-command disabled>● 記録を始める</button><button type="button" id="export" data-command disabled>保存 ↓</button><button type="button" id="import" data-command disabled>読み込み・再生</button></div><input id="recording-file" type="file" accept=".json,application/json" hidden><p id="recording-status" class="recording-status" role="status">記録はまだありません</p></section>
+      </aside>
+    </div>
+    <section class="history-panel" aria-label="シミュレーションの履歴"><gar-event-log id="events" label="動作の記録" clear-label="表示を消す" empty-label="操作するとここに記録されます" max-entries="100"></gar-event-log></section>
+    <footer><span>Orange Pi Zero 2W · 1GB / GC9A01 · 240 × 240</span><span>GAR共有部品 + ロボの顔の共通ロジック</span></footer>
+  </main>
+</body>
+</html>
