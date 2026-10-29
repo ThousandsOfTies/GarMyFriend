@@ -38,7 +38,7 @@ sh infra/orangepi-zero2w/build.sh
 ```
 
 `build/arm64/device-output` と `gar_rotary_input` をリリースの `build/` に置きます。
-アプリの `application/`、`firmware/`、`shared/`、`hardware/`、`infra/orangepi-zero2w/` と、使用する共有ソースも一緒に転送します。
+Productの `scripts/`、`hardware/`、`infra/orangepi-zero2w/` と、`sources/gar-my-friend/` のapplication・firmware・shared、使用する `sources/gar-tools/` の共有ソースを一緒に転送します。バイナリーはProductの `build/` に配置します。
 アーカイブに含めていない親フォルダーが0700になることがあるため、展開時は `umask 022` を使います。インストーラーもアプリ内のディレクトリーの読み取り権限を整えます。
 
 実機上でビルドする場合はコンパイラーを用意し、`CC=gcc CXX=g++ sh infra/orangepi-zero2w/build.sh` を使います。

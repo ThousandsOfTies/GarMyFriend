@@ -1,11 +1,11 @@
 #!/bin/sh
 set -eu
-APP=/home/gar/GarMyFriend
+APP=/home/gar/GarMyFriend-OrangePiZero2W
 RUNTIME="$APP/sources/gar-tools/targets/linux-device/runtime"
 export GAR_HARDWARE_DIR="$APP/hardware"
-GPIO_CHIP=$(node "$APP/application/hardware.cjs" --value chip)
-SPI_DEVICE=$(node "$APP/application/hardware.cjs" --value spi)
-LCD_DC=$(node "$APP/application/hardware.cjs" --value dc)
+GPIO_CHIP=$(node "$APP/sources/gar-my-friend/application/hardware.cjs" --value chip)
+SPI_DEVICE=$(node "$APP/sources/gar-my-friend/application/hardware.cjs" --value spi)
+LCD_DC=$(node "$APP/sources/gar-my-friend/application/hardware.cjs" --value dc)
 modprobe cuse
 modprobe gpio-sim
 mountpoint -q /sys/kernel/config || mount -t configfs none /sys/kernel/config

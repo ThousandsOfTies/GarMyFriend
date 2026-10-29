@@ -9,12 +9,12 @@ APP=/opt/garmyfriend/app
 cd "$APP"
 # tar may create unlisted intermediate directories using the caller's umask.
 # These directories contain only this root-managed application release.
-find application firmware hardware infra shared sources build -type d -exec chmod 0755 {} +
+find scripts hardware infra sources build -type d -exec chmod 0755 {} +
 test -x /opt/garmyfriend/node/bin/node
 test -x build/device-output
 test -x build/gar_rotary_input
 /opt/garmyfriend/node/bin/node --version
-GAR_HARDWARE_DIR="$APP/hardware/orangepi-zero2w" /opt/garmyfriend/node/bin/node application/hardware.cjs --value spi
+GAR_HARDWARE_DIR="$APP/hardware/orangepi-zero2w" /opt/garmyfriend/node/bin/node sources/gar-my-friend/application/hardware.cjs --value spi
 getent group gpio >/dev/null || groupadd --system gpio
 getent group spi >/dev/null || groupadd --system spi
 id garmyfriend >/dev/null 2>&1 || useradd --system --no-create-home --home-dir /nonexistent --shell /usr/sbin/nologin garmyfriend

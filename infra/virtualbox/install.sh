@@ -1,10 +1,9 @@
 #!/bin/sh
 set -eu
-cd /home/gar/GarMyFriend
+cd /home/gar/GarMyFriend-OrangePiZero2W
 mkdir -p build /home/gar/.config/garmyfriend
-make -B -C sources/gar-tools/targets/linux-device/runtime/gc9a01-stub CC=gcc BIN=/home/gar/GarMyFriend/build/cuse_spi_gc9a01
-make -B -C sources/gar-tools/targets/linux-device/runtime/rotary-input CC=gcc BIN=/home/gar/GarMyFriend/build/gar_rotary_input
-g++ -std=c++11 -Wall -Wextra -O2 application/device-output.cpp -o build/device-output
+make -B -C sources/gar-tools/targets/linux-device/runtime/gc9a01-stub CC=gcc BIN=/home/gar/GarMyFriend-OrangePiZero2W/build/cuse_spi_gc9a01
+GAR_TOOLS_ROOT="$PWD/sources/gar-tools" GAR_BUILD_DIR="$PWD/build" CC=gcc CXX=g++ sh sources/gar-my-friend/tools/build-native.sh
 sudo install -m 0644 infra/virtualbox/garmyfriend.service /etc/systemd/system/
 sudo install -m 0644 infra/virtualbox/garmyfriend-panel.service /etc/systemd/system/
 sudo install -m 0644 infra/virtualbox/garmyfriend-devices.service /etc/systemd/system/

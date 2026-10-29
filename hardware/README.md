@@ -16,7 +16,7 @@
 直下のgpio/spiはVMの割り当てです。実機はArmbianのpin controllerとSPIデバイスを確認し、`orangepi-zero2w/` に分けています。
 物理番号をgpio.csvのlineへ写しません。たとえば物理18番のPH4は、今回の実機ではgpiochip1のline 228です。
 
-`application/hardware.cjs` がgpio/spiを読み、GPIO読取とC++液晶出力へ値を渡します。
+`sources/gar-my-friend/application/hardware.cjs` がgpio/spiを読み、GPIO読取とC++液晶出力へ値を渡します。
 仮想ドライバも同じCSVからSPI名とDCラインを取得し、BridgeはGARの既存CSV読込を使います。
 `GAR_HARDWARE_DIR` は選択するCSVディレクトリーを指定するために使います。
 

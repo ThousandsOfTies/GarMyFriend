@@ -30,7 +30,7 @@ for name in ['spidev0.0','gpiochip0']:
     assert stat.S_ISCHR(Path('/dev',name).stat().st_mode)
 assert not Path('/dev/i2c-1').exists(),'Unused actuator device is still running'
 pid=int(service('show','garmyfriend','-p','MainPID','--value'))
-assert pid>1 and b'application/face.cjs' in Path(f'/proc/{pid}/cmdline').read_bytes()
+assert pid>1 and b'scripts/run-face.cjs' in Path(f'/proc/{pid}/cmdline').read_bytes()
 os.kill(pid,signal.SIGSTOP)
 try:
     time.sleep(.3)

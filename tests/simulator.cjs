@@ -7,7 +7,7 @@ function frame(color){const data=Buffer.alloc(115200);for(let i=0;i<data.length;
   const calls=[];
   const bridge={frame:frame(0xff00),frameId:'first',counter:0,status(){return {displayReady:true,frameId:this.frameId};},state(){return {io:this.status(),rotary:{ready:true,counter:this.counter}};},async inject(input){calls.push(input);if(input.action==='rotate')this.counter+=input.direction;},close(){}};
   const server=createSimulatorServer({deviceBridge:bridge});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
-  const browser=await chromium.launch({channel:'msedge',headless:true});
+  const browser=await chromium.launch({channel:process.platform==='win32'?'msedge':undefined,headless:true});
   try{
     const page=await browser.newPage({viewport:{width:1000,height:750}}),errors=[];page.on('pageerror',error=>errors.push(error.message));
     await page.goto(`http://127.0.0.1:${server.address().port}`);

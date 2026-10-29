@@ -2,13 +2,13 @@
 Description=GarMyFriend face application
 After=garmyfriend-devices.service
 Requires=garmyfriend-devices.service
-ConditionPathExists=/home/gar/GarMyFriend/application/face.cjs
+ConditionPathExists=/home/gar/GarMyFriend-OrangePiZero2W/scripts/run-face.cjs
 
 [Service]
 Type=simple
 User=gar
-WorkingDirectory=/home/gar/GarMyFriend
-ExecStart=/usr/bin/node application/face.cjs
+WorkingDirectory=/home/gar/GarMyFriend-OrangePiZero2W
+ExecStart=/usr/bin/node scripts/run-face.cjs
 Restart=on-failure
 RestartSec=2
 NoNewPrivileges=true

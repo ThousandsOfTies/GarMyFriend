@@ -30,7 +30,7 @@ def scp(source,destination):
 
 def archive():
     STATE.mkdir(parents=True,exist_ok=True)
-    items=['application','simulation','firmware','shared/expressions.json','simulator','hardware','infra','tests/vm-parts.py','sources/gar-tools/targets/linux-device/runtime/gc9a01-output','sources/gar-tools/targets/linux-device/runtime/gc9a01-stub','sources/gar-tools/targets/linux-device/runtime/ili9341-stub','sources/gar-tools/targets/linux-device/runtime/rotary-input','sources/gar-tools/targets/linux-device/runtime/web-bridge','sources/gar-tools/web-simulator/components/display.mjs','sources/gar-tools/web-simulator/components/framebuffer.mjs','sources/gar-tools/web-simulator/components/rotary.mjs']
+    items=['sources/gar-my-friend/application','sources/gar-my-friend/firmware','sources/gar-my-friend/shared/expressions.json','sources/gar-my-friend/tools/build-native.sh','scripts/run-face.cjs','simulation','simulator','hardware','infra','tests/vm-parts.py','sources/gar-tools/targets/linux-device/runtime/gc9a01-output','sources/gar-tools/targets/linux-device/runtime/gc9a01-stub','sources/gar-tools/targets/linux-device/runtime/ili9341-stub','sources/gar-tools/targets/linux-device/runtime/rotary-input','sources/gar-tools/targets/linux-device/runtime/web-bridge','sources/gar-tools/web-simulator/components/display.mjs','sources/gar-tools/web-simulator/components/framebuffer.mjs','sources/gar-tools/web-simulator/components/rotary.mjs']
     def keep(info):
         parts=Path(info.name).parts
         if '.git' in parts or '__pycache__' in parts or 'node_modules' in parts or info.name.startswith('simulator/gar-components'):return None
@@ -47,7 +47,7 @@ def archive():
 def deploy():
     output=archive()
     scp(output,'garmyfriend.tar.gz')
-    ssh('mkdir -p /home/gar/GarMyFriend && tar -xzf /home/gar/garmyfriend.tar.gz -C /home/gar/GarMyFriend && sh /home/gar/GarMyFriend/infra/virtualbox/install.sh')
+    ssh('mkdir -p /home/gar/GarMyFriend-OrangePiZero2W && tar -xzf /home/gar/garmyfriend.tar.gz -C /home/gar/GarMyFriend-OrangePiZero2W && sh /home/gar/GarMyFriend-OrangePiZero2W/infra/virtualbox/install.sh')
 
 def publish(open_page=False):
     binary=STATE/'cloudflared-linux-amd64'

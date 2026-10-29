@@ -11,7 +11,7 @@ SupplementaryGroups=gpio spi
 WorkingDirectory=/opt/garmyfriend/app
 Environment=GAR_HARDWARE_DIR=/opt/garmyfriend/app/hardware/orangepi-zero2w
 ExecStartPre=/usr/bin/python3 infra/orangepi-zero2w/preflight.py
-ExecStart=/opt/garmyfriend/node/bin/node application/face.cjs
+ExecStart=/opt/garmyfriend/node/bin/node scripts/run-face.cjs
 Restart=on-failure
 RestartSec=3
 NoNewPrivileges=true

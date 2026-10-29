@@ -1,3 +1,6 @@
 [submodule "sources/gar-tools"]
 	path = sources/gar-tools
 	url = https://github.com/ThousandsOfTies/gar-tools
+[submodule "sources/gar-my-friend"]
+	path = sources/gar-my-friend
+	url = https://github.com/ThousandsOfTies/gar-my-friend.git

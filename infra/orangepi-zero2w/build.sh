@@ -1,10 +1,9 @@
 #!/bin/sh
-# Run on ARM64 with CC=gcc CXX=g++, or cross-build on the development VM.
 set -eu
-cd "$(dirname "$0")/../.."
-CC=${CC:-aarch64-linux-gnu-gcc}
-CXX=${CXX:-aarch64-linux-gnu-g++}
-mkdir -p build/arm64
-"$CXX" -std=c++11 -Wall -Wextra -Werror -O2 application/device-output.cpp -o build/arm64/device-output
-"$CC" -std=c11 -Wall -Wextra -Werror -O2 sources/gar-tools/targets/linux-device/runtime/rotary-input/rotary_input.c -o build/arm64/gar_rotary_input
-file build/arm64/device-output build/arm64/gar_rotary_input
+ROOT=$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)
+export GAR_TOOLS_ROOT="$ROOT/sources/gar-tools"
+export GAR_BUILD_DIR="$ROOT/build/arm64"
+export CC=${CC:-aarch64-linux-gnu-gcc}
+export CXX=${CXX:-aarch64-linux-gnu-g++}
+sh "$ROOT/sources/gar-my-friend/tools/build-native.sh"
+file "$GAR_BUILD_DIR/device-output" "$GAR_BUILD_DIR/gar_rotary_input"

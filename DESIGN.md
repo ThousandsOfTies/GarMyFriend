@@ -4,7 +4,7 @@
 
 対象はOrange Pi Zero 2W、ARM64、1GBとGC9A01互換の240×240 RGB565液晶です。実機はArmbian上で専用サービスを導入し、実GPIO入力、SPI書き込みと液晶の顔表示を確認済みです。VMはUbuntu 24.04 x86_64、1GBでLinuxの入出力契約を検証し、ARM CPUの性能や電気特性は再現しません。
 
-実行アプリは `application/face.cjs`。`face-runtime.cjs` が8表情の循環と450msの補間、まばたきを処理し、共有のGPIO読取プログラムから回転・押下を受けます。`display-output.cjs` は描画値をC++出力プロセスへ送り、`device-output.cpp` がFaceCoreでRGB565を描いてSPIへ書きます。I²C・サーボ・模擬センサー・シナリオ・記録再生は含めません。
+実行アプリは共通リポジトリの `sources/gar-my-friend/application/face.cjs`。Productは `scripts/run-face.cjs` でCSVとバイナリーの場所を渡します。`face-runtime.cjs` が8表情の循環と450msの補間、まばたきを処理し、共有のGPIO読取プログラムから回転・押下を受けます。`display-output.cjs` は描画値をC++出力プロセスへ送り、`device-output.cpp` がFaceCoreでRGB565を描いてSPIへ書きます。I²C・サーボ・模擬センサー・シナリオ・記録再生は含めません。
 
 WebPanelのプロセスは `simulation/server.cjs`。アプリを起動せず、表情名や顔の座標、切り替えの判断を持ちません。`device-bridge.cjs` は共有Bridgeへノブ操作を中継し、GC9A01ドライバが送った画素と物理ノブの累積回転だけを取得します。
 
