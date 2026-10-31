@@ -54,3 +54,10 @@ CLK・DT・SWをプルアップ入力として使います。内蔵抵抗の有�
 信号ピンはすべて重複のない割り当てです。物理3/5のI²C1と8/10のUART0は今回使いません。
 
 参照: [Orange Pi公式wiringOP](https://github.com/orangepi-xunlong/wiringOP/blob/a7921ca2f5c124203be10d3418db70a2e15f3c10/wiringPi/wiringPi.c#L1873)、[Joy-IT KY-040](https://sensorkit.joy-it.net/en/sensors/ky-040)。
+
+## KY-040のGPIO入力デバウンス
+
+`orangepi-zero2w/gpio.csv`のCLK・DT・SWに`debounce_us=1000`を明示します。
+共通アプリがGPIOを要求する際、共有読取の`--debounce-us 1000`を通してOSへ設定します。
+列の省略・0は従来の入力設定を保ちます。1ミリ秒は要求値で、実効時間はカーネルに依存します。
+今回の変更は設定の追加と静的・ソフトウェア検証です。Orange Pi実機での追従性は未確認です。
